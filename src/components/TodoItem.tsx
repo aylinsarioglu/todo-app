@@ -20,7 +20,7 @@ function TodoItem({ todo, toggleTodo, deleteTodo }: Props) {
         onClick={() => toggleTodo(todo.id)}
         style={{
           textDecoration: todo.completed ? "line-through" : "none",
-          color: todo.completed ? "#666" : "#111",
+          color: todo.completed ? "#b8b8b8" : "#f5f5f5",
           opacity: todo.completed ? 0.7 : 1,
           cursor: "pointer"
         }}

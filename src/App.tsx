@@ -8,9 +8,12 @@ export type Todo = {
   completed: boolean;
 };
 
+type Filter = "all" | "active" | "completed";
+
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [filter, setFilter] = useState<Filter>("all");
 
   useEffect(() => {
     const savedTodos = localStorage.getItem("todos");
@@ -56,13 +59,63 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === "active") {
+      return !todo.completed;
+    }
+
+    if (filter === "completed") {
+      return todo.completed;
+    }
+
+    return true;
+  });
+
   return (
     <div>
       <h1>Todo App</h1>
       <p>Total tasks: {todos.length}</p>
+      <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+        <button
+          onClick={() => setFilter("all")}
+          style={{
+            backgroundColor: filter === "all" ? "#222" : "#3a3a3a",
+            color: "#f5f5f5",
+            border: "1px solid #555",
+            borderRadius: "6px",
+            padding: "4px 10px"
+          }}
+        >
+          All
+        </button>
+        <button
+          onClick={() => setFilter("active")}
+          style={{
+            backgroundColor: filter === "active" ? "#222" : "#3a3a3a",
+            color: "#f5f5f5",
+            border: "1px solid #555",
+            borderRadius: "6px",
+            padding: "4px 10px"
+          }}
+        >
+          Active
+        </button>
+        <button
+          onClick={() => setFilter("completed")}
+          style={{
+            backgroundColor: filter === "completed" ? "#222" : "#3a3a3a",
+            color: "#f5f5f5",
+            border: "1px solid #555",
+            borderRadius: "6px",
+            padding: "4px 10px"
+          }}
+        >
+          Completed
+        </button>
+      </div>
       <TodoInput addTodo={addTodo} />
       <TodoList
-        todos={todos}
+        todos={filteredTodos}
         toggleTodo={toggleTodo}
         deleteTodo={deleteTodo}
       />
