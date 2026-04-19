@@ -8,6 +8,10 @@ type Props = {
 };
 
 function TodoList({ todos, toggleTodo, deleteTodo }: Props) {
+  if (todos.length === 0) {
+    return <p>No todos yet</p>;
+  }
+
   return (
     <div>
       {todos.map((todo) => (

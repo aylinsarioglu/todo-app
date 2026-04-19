@@ -59,6 +59,7 @@ function App() {
   return (
     <div>
       <h1>Todo App</h1>
+      <p>Total tasks: {todos.length}</p>
       <TodoInput addTodo={addTodo} />
       <TodoList
         todos={todos}
