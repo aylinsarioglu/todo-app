@@ -14,13 +14,16 @@ function TodoInput({ addTodo }: TodoInputProps) {
   };
 
   return (
-    <div>
+    <div className="todo-input-row">
       <input
+        className="todo-input"
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Add todo..."
       />
-      <button onClick={handleAdd}>Add</button>
+      <button className="add-btn" onClick={handleAdd}>
+        Add
+      </button>
     </div>
   );
 }

@@ -9,11 +9,11 @@ type Props = {
 
 function TodoList({ todos, toggleTodo, deleteTodo }: Props) {
   if (todos.length === 0) {
-    return <p>No todos yet</p>;
+    return <p className="empty-state">No todos yet</p>;
   }
 
   return (
-    <div>
+    <div className="todo-list">
       {todos.map((todo) => (
         <TodoItem
           key={todo.id}

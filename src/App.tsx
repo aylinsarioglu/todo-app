@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import TodoInput from "./components/TodoInput.tsx";
 import TodoList from "./components/TodoList.tsx";
+import "./App.css";
 
 export type Todo = {
   id: number;
@@ -72,43 +73,28 @@ function App() {
   });
 
   return (
-    <div>
-      <h1>Todo App</h1>
-      <p>Total tasks: {todos.length}</p>
-      <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+    <main className="app-shell">
+      <section className="todo-card">
+        <header className="todo-header">
+          <h1>Todo App</h1>
+          <p className="todo-count">Total tasks: {todos.length}</p>
+        </header>
+      <div className="filters">
         <button
           onClick={() => setFilter("all")}
-          style={{
-            backgroundColor: filter === "all" ? "#222" : "#3a3a3a",
-            color: "#f5f5f5",
-            border: "1px solid #555",
-            borderRadius: "6px",
-            padding: "4px 10px"
-          }}
+          className={`filter-btn ${filter === "all" ? "active" : ""}`}
         >
           All
         </button>
         <button
           onClick={() => setFilter("active")}
-          style={{
-            backgroundColor: filter === "active" ? "#222" : "#3a3a3a",
-            color: "#f5f5f5",
-            border: "1px solid #555",
-            borderRadius: "6px",
-            padding: "4px 10px"
-          }}
+          className={`filter-btn ${filter === "active" ? "active" : ""}`}
         >
           Active
         </button>
         <button
           onClick={() => setFilter("completed")}
-          style={{
-            backgroundColor: filter === "completed" ? "#222" : "#3a3a3a",
-            color: "#f5f5f5",
-            border: "1px solid #555",
-            borderRadius: "6px",
-            padding: "4px 10px"
-          }}
+          className={`filter-btn ${filter === "completed" ? "active" : ""}`}
         >
           Completed
         </button>
@@ -119,7 +105,8 @@ function App() {
         toggleTodo={toggleTodo}
         deleteTodo={deleteTodo}
       />
-    </div>
+      </section>
+    </main>
   );
 }
 
