@@ -10,13 +10,13 @@ export type Todo = {
   completed: boolean;
 };
 
-type Filter = "all" | "active" | "completed";
+type Menu = "tasks" | "completed" | "profile";
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [user, setUser] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [filter, setFilter] = useState<Filter>("all");
+  const [activeMenu, setActiveMenu] = useState<Menu>("tasks");
 
   useEffect(() => {
     const savedTodos = localStorage.getItem("todos");
@@ -82,74 +82,123 @@ function App() {
     setUser(null);
   };
 
-  const filteredTodos = todos.filter((todo) => {
-    if (filter === "active") {
-      return !todo.completed;
-    }
-
-    if (filter === "completed") {
-      return todo.completed;
-    }
-
-    return true;
-  });
+  const completedCount = todos.filter((todo) => todo.completed).length;
+  const visibleTodos =
+    activeMenu === "completed"
+      ? todos.filter((todo) => todo.completed)
+      : todos;
 
   if (!user) {
     return (
       <main className="app-shell">
-        <section className="todo-card">
-          <header className="todo-header">
-            <h1>Welcome Back</h1>
-            <p className="todo-count">Sign in to manage your tasks</p>
-          </header>
-          <Login onLogin={login} />
-        </section>
+        <div className="app-container">
+          <section className="todo-card">
+            <header className="todo-header">
+              <h1>Yapılacaklar Listem</h1>
+              <p className="app-subtitle">Kendi görevlerini kolayca yönet</p>
+              <p className="todo-count">Giriş yaparak devam et</p>
+            </header>
+            <Login onLogin={login} />
+          </section>
+        </div>
       </main>
     );
   }
 
+  const avatarLetter = user.charAt(0).toUpperCase();
+  const taskCountText = `${todos.length} görev`;
+
   return (
     <main className="app-shell">
-      <section className="todo-card">
-        <header className="todo-header app-header">
-          <div>
-            <h1>Todo App</h1>
-            <p className="todo-count">Total tasks: {todos.length}</p>
-          </div>
-          <div className="user-actions">
-            <span className="username">{user}</span>
-            <button className="logout-btn" onClick={logout}>
-              Logout
+      <div className="dashboard-layout">
+        <aside className="sidebar">
+          <div className="sidebar-brand">Yapılacaklar Listem</div>
+          <nav className="sidebar-nav" aria-label="Dashboard Navigation">
+            <button
+              className={`sidebar-item ${activeMenu === "tasks" ? "active" : ""}`}
+              type="button"
+              onClick={() => setActiveMenu("tasks")}
+            >
+              Tasks
             </button>
+            <button
+              className={`sidebar-item ${activeMenu === "completed" ? "active" : ""}`}
+              type="button"
+              onClick={() => setActiveMenu("completed")}
+            >
+              Completed ({completedCount})
+            </button>
+            <button
+              className={`sidebar-item ${activeMenu === "profile" ? "active" : ""}`}
+              type="button"
+              onClick={() => setActiveMenu("profile")}
+            >
+              Profile
+            </button>
+          </nav>
+        </aside>
+        <section className="main-content">
+          <div className="app-container">
+            <section className="todo-card">
+              {activeMenu === "profile" ? (
+                <>
+                  <header className="todo-header app-header">
+                    <div className="title-block">
+                      <h1>Profilim</h1>
+                      <p className="app-subtitle">Kullanıcı bilgilerin</p>
+                    </div>
+                    <div className="user-actions">
+                      <div className="user-profile">
+                        <span className="avatar" aria-hidden="true">
+                          {avatarLetter}
+                        </span>
+                        <span className="username">{user}</span>
+                      </div>
+                      <button className="logout-btn" onClick={logout}>
+                        Logout
+                      </button>
+                    </div>
+                  </header>
+                  <section className="profile-view">
+                    <span className="avatar profile-avatar" aria-hidden="true">
+                      {avatarLetter}
+                    </span>
+                    <h2 className="profile-name">{user}</h2>
+                    <p className="profile-description">Bu senin profil alanın</p>
+                  </section>
+                </>
+              ) : (
+                <>
+                  <header className="todo-header app-header">
+                    <div className="title-block">
+                      <h1>Yapılacaklar Listem</h1>
+                      <p className="app-subtitle">Hoş geldin {user} 👋</p>
+                      <p className="todo-count">{taskCountText}</p>
+                    </div>
+                    <div className="user-actions">
+                      <div className="user-profile">
+                        <span className="avatar" aria-hidden="true">
+                          {avatarLetter}
+                        </span>
+                        <span className="username">{user}</span>
+                      </div>
+                      <button className="logout-btn" onClick={logout}>
+                        Logout
+                      </button>
+                    </div>
+                  </header>
+                  <TodoInput addTodo={addTodo} />
+                  <TodoList
+                    todos={visibleTodos}
+                    toggleTodo={toggleTodo}
+                    deleteTodo={deleteTodo}
+                  />
+                </>
+              )}
+            </section>
           </div>
-        </header>
-        <div className="filters">
-          <button
-            onClick={() => setFilter("all")}
-            className={`filter-btn ${filter === "all" ? "active" : ""}`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setFilter("active")}
-            className={`filter-btn ${filter === "active" ? "active" : ""}`}
-          >
-            Active
-          </button>
-          <button
-            onClick={() => setFilter("completed")}
-            className={`filter-btn ${filter === "completed" ? "active" : ""}`}
-          >
-            Completed
-          </button>
-        </div>
-        <TodoInput addTodo={addTodo} />
-        <TodoList
-          todos={filteredTodos}
-          toggleTodo={toggleTodo}
-          deleteTodo={deleteTodo}
-        />
-      </section>
+        </section>
+      </div>
     </main>
   );
 }

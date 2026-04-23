@@ -9,7 +9,14 @@ type Props = {
 
 function TodoList({ todos, toggleTodo, deleteTodo }: Props) {
   if (todos.length === 0) {
-    return <p className="empty-state">No todos yet</p>;
+    return (
+      <div className="empty-state">
+        <p className="empty-state-title">Henüz görev yok 👀</p>
+        <p className="empty-state-subtitle">
+          Yeni bir görev ekleyerek başlayabilirsin
+        </p>
+      </div>
+    );
   }
 
   return (

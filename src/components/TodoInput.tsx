@@ -19,6 +19,11 @@ function TodoInput({ addTodo }: TodoInputProps) {
         className="todo-input"
         value={text}
         onChange={(e) => setText(e.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            handleAdd();
+          }
+        }}
         placeholder="Add todo..."
       />
       <button className="add-btn" onClick={handleAdd}>
