@@ -11,7 +11,7 @@ function TodoList({ todos, toggleTodo, deleteTodo }: Props) {
   if (todos.length === 0) {
     return (
       <div className="empty-state">
-        <p className="empty-state-title">Henüz görev yok 👀</p>
+        <p className="empty-state-title">📝 Henüz görev yok</p>
         <p className="empty-state-subtitle">
           Yeni bir görev ekleyerek başlayabilirsin
         </p>
