@@ -7,6 +7,17 @@ body {
   font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
   background: radial-gradient(circle at top, #1e293b, #0b1120 62%);
   color: #f1f5f9;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+body.theme-dark {
+  background: radial-gradient(circle at top, #1e293b, #0b1120 62%);
+  color: #f1f5f9;
+}
+
+body.theme-light {
+  background: radial-gradient(circle at top, #e2e8f0, #cbd5e1 62%);
+  color: #0f172a;
 }
 
 #root {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { FormEvent } from "react";
 
 type LoginProps = {
   onLogin: (username: string) => void;
@@ -7,7 +8,9 @@ type LoginProps = {
 function Login({ onLogin }: LoginProps) {
   const [username, setUsername] = useState("");
 
-  const handleLogin = () => {
+  const handleLogin = (event: FormEvent) => {
+    event.preventDefault();
+
     if (!username.trim()) {
       return;
     }
@@ -17,17 +20,17 @@ function Login({ onLogin }: LoginProps) {
   };
 
   return (
-    <div className="todo-input-row">
+    <form className="todo-input-row" onSubmit={handleLogin}>
       <input
         className="todo-input"
         value={username}
         onChange={(event) => setUsername(event.target.value)}
         placeholder="Enter username"
       />
-      <button className="add-btn" onClick={handleLogin}>
+      <button className="add-btn" type="submit">
         Login
       </button>
-    </div>
+    </form>
   );
 }
 

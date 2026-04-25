@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Login from "./components/Login.tsx";
+import Profile from "./components/Profile.tsx";
 import TodoInput from "./components/TodoInput.tsx";
 import TodoList from "./components/TodoList.tsx";
 import "./App.css";
@@ -141,32 +142,7 @@ function App() {
           <div className="app-container">
             <section className="todo-card">
               {activeMenu === "profile" ? (
-                <>
-                  <header className="todo-header app-header">
-                    <div className="title-block">
-                      <h1>Profilim</h1>
-                      <p className="app-subtitle">Kullanıcı bilgilerin</p>
-                    </div>
-                    <div className="user-actions">
-                      <div className="user-profile">
-                        <span className="avatar" aria-hidden="true">
-                          {avatarLetter}
-                        </span>
-                        <span className="username">{user}</span>
-                      </div>
-                      <button className="logout-btn" onClick={logout}>
-                        Logout
-                      </button>
-                    </div>
-                  </header>
-                  <section className="profile-view">
-                    <span className="avatar profile-avatar" aria-hidden="true">
-                      {avatarLetter}
-                    </span>
-                    <h2 className="profile-name">{user}</h2>
-                    <p className="profile-description">Bu senin profil alanın</p>
-                  </section>
-                </>
+                <Profile user={user} onLogout={logout} />
               ) : (
                 <>
                   <header className="todo-header app-header">
@@ -182,9 +158,6 @@ function App() {
                         </span>
                         <span className="username">{user}</span>
                       </div>
-                      <button className="logout-btn" onClick={logout}>
-                        Logout
-                      </button>
                     </div>
                   </header>
                   <TodoInput addTodo={addTodo} />
