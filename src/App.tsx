@@ -3,15 +3,17 @@ import Login from "./components/Login.tsx";
 import Profile from "./components/Profile.tsx";
 import TodoInput from "./components/TodoInput.tsx";
 import TodoList from "./components/TodoList.tsx";
+import { isPast, isToday } from "./utils/dateUtils.ts";
 import "./App.css";
 
 export type Todo = {
   id: number;
   text: string;
   completed: boolean;
+  date?: string;
 };
 
-type Menu = "tasks" | "completed" | "profile";
+type Menu = "tasks" | "today" | "overdue" | "completed" | "profile";
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -47,10 +49,10 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos, isLoaded]);
 
-  const addTodo = (text: string) => {
+  const addTodo = (text: string, date?: string) => {
     setTodos([
       ...todos,
-      { id: Date.now(), text, completed: false }
+      { id: Date.now(), text, completed: false, date: date || undefined }
     ]);
   };
 
@@ -66,6 +68,17 @@ function App() {
 
   const deleteTodo = (id: number) => {
     setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  const updateTodoText = (id: number, text: string) => {
+    const trimmedText = text.trim();
+    if (!trimmedText) {
+      return;
+    }
+
+    setTodos(
+      todos.map((todo) => (todo.id === id ? { ...todo, text: trimmedText } : todo))
+    );
   };
 
   const login = (username: string) => {
@@ -84,10 +97,16 @@ function App() {
   };
 
   const completedCount = todos.filter((todo) => todo.completed).length;
+  const todayCount = todos.filter((todo) => isToday(todo.date)).length;
+  const overdueCount = todos.filter((todo) => isPast(todo.date) && !todo.completed).length;
   const visibleTodos =
     activeMenu === "completed"
       ? todos.filter((todo) => todo.completed)
-      : todos;
+      : activeMenu === "today"
+        ? todos.filter((todo) => isToday(todo.date))
+        : activeMenu === "overdue"
+          ? todos.filter((todo) => isPast(todo.date) && !todo.completed)
+          : todos;
 
   if (!user) {
     return (
@@ -121,6 +140,20 @@ function App() {
               onClick={() => setActiveMenu("tasks")}
             >
               Tasks
+            </button>
+            <button
+              className={`sidebar-item ${activeMenu === "today" ? "active" : ""}`}
+              type="button"
+              onClick={() => setActiveMenu("today")}
+            >
+              Today ({todayCount})
+            </button>
+            <button
+              className={`sidebar-item ${activeMenu === "overdue" ? "active" : ""}`}
+              type="button"
+              onClick={() => setActiveMenu("overdue")}
+            >
+              Overdue ({overdueCount})
             </button>
             <button
               className={`sidebar-item ${activeMenu === "completed" ? "active" : ""}`}
@@ -160,11 +193,12 @@ function App() {
                       </div>
                     </div>
                   </header>
-                  <TodoInput addTodo={addTodo} />
+                  {activeMenu === "tasks" ? <TodoInput addTodo={addTodo} /> : null}
                   <TodoList
                     todos={visibleTodos}
                     toggleTodo={toggleTodo}
                     deleteTodo={deleteTodo}
+                    updateTodoText={updateTodoText}
                   />
                 </>
               )}
