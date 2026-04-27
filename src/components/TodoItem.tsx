@@ -44,6 +44,7 @@ function TodoItem({
         {isEditing ? (
           <input
             className="todo-edit-input"
+            placeholder="Görevi düzenle..."
             value={editText}
             onChange={(event) => setEditText(event.target.value)}
             onBlur={saveEditing}

@@ -1,16 +1,18 @@
 import { useState } from "react";
 
 type TodoInputProps = {
-  addTodo: (text: string) => void;
+  addTodo: (text: string, date?: string) => void;
 };
 
 function TodoInput({ addTodo }: TodoInputProps) {
   const [text, setText] = useState("");
+  const [date, setDate] = useState("");
 
   const handleAdd = () => {
     if (!text.trim()) return;
-    addTodo(text);
+    addTodo(text, date);
     setText("");
+    setDate("");
   };
 
   return (
@@ -25,6 +27,13 @@ function TodoInput({ addTodo }: TodoInputProps) {
           }
         }}
         placeholder="Add todo..."
+      />
+      <input
+        className="todo-date-input"
+        type="date"
+        value={date}
+        onChange={(event) => setDate(event.target.value)}
+        aria-label="Görev tarihi seç"
       />
       <button className="add-btn" onClick={handleAdd}>
         Add

@@ -70,6 +70,10 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const clearCompleted = () => {
+    setTodos(todos.filter((todo) => !todo.completed));
+  };
+
   const updateTodoText = (id: number, text: string) => {
     const trimmedText = text.trim();
     if (!trimmedText) {
@@ -99,14 +103,15 @@ function App() {
   const completedCount = todos.filter((todo) => todo.completed).length;
   const todayCount = todos.filter((todo) => isToday(todo.date)).length;
   const overdueCount = todos.filter((todo) => isPast(todo.date) && !todo.completed).length;
+  const orderedTodos = [...todos].sort((a, b) => Number(a.completed) - Number(b.completed));
   const visibleTodos =
     activeMenu === "completed"
-      ? todos.filter((todo) => todo.completed)
+      ? orderedTodos.filter((todo) => todo.completed)
       : activeMenu === "today"
-        ? todos.filter((todo) => isToday(todo.date))
+        ? orderedTodos.filter((todo) => isToday(todo.date))
         : activeMenu === "overdue"
-          ? todos.filter((todo) => isPast(todo.date) && !todo.completed)
-          : todos;
+          ? orderedTodos.filter((todo) => isPast(todo.date) && !todo.completed)
+          : orderedTodos;
 
   if (!user) {
     return (
@@ -199,6 +204,8 @@ function App() {
                     toggleTodo={toggleTodo}
                     deleteTodo={deleteTodo}
                     updateTodoText={updateTodoText}
+                    clearCompleted={clearCompleted}
+                    hasCompletedTodos={completedCount > 0}
                   />
                 </>
               )}
